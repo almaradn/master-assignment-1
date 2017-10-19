@@ -3,13 +3,16 @@
  * the assignment.  Make sure to add your name and @oregonstate.edu email
  * address below:
  *
- * Name:
- * Email:
+ * Name: adnan almarzooq  
+ * Email: almaradn@oregonstate.edu
  */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "students.h"
+
 
 /*
  * This function should initialize a single student struct with name, ID, and
@@ -32,8 +35,16 @@
  *   gpa - the student's GPA
  */
 void init_student(struct student* student, char* name, int id, float gpa) {
-
+	char * tempor = malloc(sizeof(char) * (strlen(name) + 1)); //initializing student allocation
+	//copying name in temporary
+    strcpy(tempor, name);
+	//initializing student values
+	student->name = tempor;
+	student->id = id;
+	student->gpa = gpa;
 }
+
+
 
 
 /*
@@ -46,7 +57,8 @@ void init_student(struct student* student, char* name, int id, float gpa) {
  *     struct itself should not be freed.
  */
 void free_student(struct student* student) {
-
+	//free student name, only dynamic memory array.
+	free(student->name);
 }
 
 
@@ -69,8 +81,14 @@ void free_student(struct student* student) {
  *   using a combination of free_student() and free().
  */
 struct student* deep_copy_student(struct student* student) {
-  return NULL;
+	//malloc student values to be idential with the other (copy) student value
+	struct student* identical = malloc(sizeof(struct student));
+    identical->name = NULL;
+    init_student(identical, student->name, student->id, student->gpa);
+	return identical;
 }
+
+
 
 
 /*
@@ -100,10 +118,18 @@ struct student* deep_copy_student(struct student* student) {
  *   name, the i'th ID, and the i'th GPA from the arrays provided as arguments.
  */
 struct student* create_student_array(int num_students, char** names, int* ids,
-    float* gpas) {
+	float* gpas) {
+	struct student* student_array;
+	int k;
 
-  return NULL;
-}
+	student_array = (struct student*)malloc(num_students * sizeof(struct student));
+
+	for (k = 0; k < num_students; ++k)
+	{init_student(&student_array[k], names[k], ids[k], gpas[k]);}//creating each student in the list.
+
+	return student_array;
+
+	}
 
 
 /*
@@ -118,7 +144,16 @@ struct student* create_student_array(int num_students, char** names, int* ids,
  *   num_students - the number of students in the array
  */
 void destroy_student_array(struct student* students, int num_students) {
-
+	int k; //k for the loop
+	for (k=0; k < num_students; ++k) //loop removing all students.. [one by one]
+	{//removes student
+		free_student(&students[k]);
+	}
+	//destroy the whole list.
+	free(students);
+	
+	
+	
 }
 
 
@@ -131,8 +166,10 @@ void destroy_student_array(struct student* students, int num_students) {
  *   num_students - the number of students in the array
  */
 void print_students(struct student* students, int num_students) {
+	int k;
+	for(k = 0; k < num_students; ++k) {printf("%s||%d||%f\n", students[k].name, students[k].id, students[k].gpa); // for loop: printing students one by one
 
-}
+}}
 
 
 /*
@@ -151,8 +188,17 @@ void print_students(struct student* students, int num_students) {
  *   should not make a copy of the student being returned.
  */
 struct student* find_max_gpa(struct student* students, int num_students) {
-  return NULL;
-}
+	int i;
+	int maxi;
+	maxi = 0;	
+	for (i = 1; i < num_students; ++i) // looping throw all students
+	{if (students[i].gpa > students[maxi].gpa)	 //f gpa is higher, takes its I value 
+		{maxi = i;}
+	}
+	//then return student plus I address.
+	return (students + maxi);
+	
+	}
 
 
 /*
@@ -171,7 +217,13 @@ struct student* find_max_gpa(struct student* students, int num_students) {
  *   should not make a copy of the student being returned.
  */
 struct student* find_min_gpa(struct student* students, int num_students) {
-  return NULL;
+	int mini;
+	int i;
+	mini = 0;
+	for (i = 1; i < num_students; ++i) // looping throw all students
+	{if (students[i].gpa < students[mini].gpa){ // same thing max gpa does, this functions does same
+			mini = i;}}
+	return (students + mini); // same outcome too
 }
 
 
@@ -188,6 +240,19 @@ struct student* find_min_gpa(struct student* students, int num_students) {
  *     this array will be sorted by descending GPA
  *   num_students - the number of students in the array
  */
-void sort_by_gpa(struct student* students, int num_students) {
-
-}
+void sort_by_gpa(struct student* students, int num_students) { //bubble sort function for listing the 
+	int k;
+	int i;
+	struct student rt;
+	//bubble sort function for loop.
+	for (i = 0; i < num_students; ++i) { //loops into all students and optimize their places depending on their gpa
+		for (k = i + 1; k < num_students; ++k) {// if gpa is higher, put in temp variable struct student, move it up nd past the temp in the previous place
+			if (students[k].gpa > students[i].gpa) {
+					rt = students[i];
+					students[i] = students[k];
+					students[k] = rt;
+					
+		  }
+		}
+	  }
+	}
